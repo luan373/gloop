@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="gloop-${project.version}"
+	xmlns="http://karaf.apache.org/xmlns/features/v1.3.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
+	
+	<repository>mvn:org.apache.aries.jax.rs/org.apache.aries.jax.rs.features/1.0.6/xml</repository>
+	
+	<feature name="gloop-jpa-datasource"
+		version="${project.version}">
+		<config name="org.ops4j.datasource-gloop">
+            osgi.jdbc.driver.class=org.postgresql.Driver
+            databaseName=gloop
+            dataSourceName=gloop			
+			user=postgres
+			password=postgres
+        </config>
+		<capability>
+            osgi.service;objectClass=javax.sql.DataSource;effective:=active;osgi.jndi.service.name=gloop
+        </capability>
+	</feature>
+
+	<feature name="gloop-jpa-common" version="${project.version}">
+		<feature>transaction</feature>
+		<feature>jndi</feature>
+		<feature>pax-jdbc-config</feature>
+		<feature>pax-jdbc-postgresql</feature>
+		<feature>pax-jdbc-pool-dbcp2</feature>
+		<feature>jdbc</feature>
+		<feature dependency="true">aries-blueprint</feature>
+		<feature version="[2,3)">jpa</feature>
+		<feature version="[5,6)">hibernate</feature>
+		<!--<feature version="[3,4)">openjpa3</feature> -->
+		<bundle>mvn:br.com/gloop-jpa-provider-api/${project.version}</bundle>
+	</feature>
+
+	<!-- Declarative Service Providers -->
+	<feature name="gloop-jpa-provider-ds-hibernate"
+		version="${project.version}">
+		<feature>scr</feature>
+		<feature version="${project.version}">gloop-jpa-common</feature>
+		<bundle>mvn:br.com/gloop-jpa-provider-ds-hibernate/${project.version}</bundle>
+	</feature>
+
+	<feature name="gloop-jpa-command" version="${project.version}">
+		<bundle>mvn:br.com/gloop-jpa-command/${project.version}</bundle>
+	</feature>
+	
+	<feature name="gloop-rest-whiteboard" version="${project.version}">
+        <feature version="${project.version}">gloop-jpa-common</feature>
+        <feature>pax-web-http-whiteboard</feature>
+        <feature>aries-jax-rs-whiteboard</feature>
+        <feature>aries-jax-rs-whiteboard-jackson</feature>
+        <bundle dependency="true">mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.jaxws-api-2.2/${servicemix-spec.version}</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.saaj-api-1.3/${servicemix-spec.version}</bundle>
+        <!--<bundle dependency="true">mvn:org.osgi/org.osgi.framework/1.10.0</bundle>-->
+        <bundle>mvn:br.com/gloop-rest-whiteboard/${project.version}</bundle>
+    </feature>
+
+</features>
