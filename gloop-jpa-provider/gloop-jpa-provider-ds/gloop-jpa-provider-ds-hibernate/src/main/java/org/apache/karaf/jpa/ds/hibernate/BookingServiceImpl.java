@@ -18,8 +18,8 @@ package org.apache.karaf.jpa.ds.hibernate;
 
 import org.apache.aries.jpa.template.JpaTemplate;
 import org.apache.aries.jpa.template.TransactionType;
-import org.apache.karaf.jpa.Booking;
-import org.apache.karaf.jpa.BookingService;
+import org.apache.karaf.jpa.model.Booking;
+import org.apache.karaf.jpa.service.BookingService;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

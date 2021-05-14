@@ -14,7 +14,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.karaf.jpa;
+package org.apache.karaf.jpa.model;
+
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,36 +26,38 @@ import javax.persistence.Id;
  * A regular JPA entity, using JPA annotations.
  */
 @Entity
-public class Booking {
+public class Booking implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+	private static final long serialVersionUID = -7907899682459398342L;
 
-    private String customer;
-    private String flight;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    public Long getId() {
-        return id;
-    }
+	private String customer;
+	private String flight;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getCustomer() {
-        return customer;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
+	public String getCustomer() {
+		return customer;
+	}
 
-    public String getFlight() {
-        return flight;
-    }
+	public void setCustomer(String customer) {
+		this.customer = customer;
+	}
 
-    public void setFlight(String flight) {
-        this.flight = flight;
-    }
+	public String getFlight() {
+		return flight;
+	}
+
+	public void setFlight(String flight) {
+		this.flight = flight;
+	}
 }

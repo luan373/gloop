@@ -14,9 +14,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.karaf.jpa;
+package org.apache.karaf.jpa.service;
 
 import java.util.List;
+
+import org.apache.karaf.jpa.model.Booking;
 
 /**
  * Simple interface describing the booking service.

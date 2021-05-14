@@ -30,7 +30,10 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.apache.karaf.jpa</Export-Package>
+                        <Export-Package>
+                        	org.apache.karaf.jpa.model,
+                        	org.apache.karaf.jpa.service
+                        </Export-Package>
                         <Import-Package>
                             javax.persistence;version="[2,3)",
                             org.hibernate.proxy,
