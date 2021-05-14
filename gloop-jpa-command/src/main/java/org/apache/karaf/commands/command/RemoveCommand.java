@@ -14,32 +14,36 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.karaf.jpa.completers;
+package org.apache.karaf.commands.command;
 
-import org.apache.karaf.jpa.Booking;
-import org.apache.karaf.jpa.BookingService;
+import org.apache.karaf.commands.completers.BookingIdCompleter;
+import org.apache.karaf.jpa.service.BookingService;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Completion;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.api.console.CommandLine;
-import org.apache.karaf.shell.api.console.Completer;
-import org.apache.karaf.shell.api.console.Session;
-import org.apache.karaf.shell.support.completers.StringsCompleter;
 
 import java.util.List;
 
 @Service
-public class BookingIdCompleter implements Completer {
+@Command(scope = "booking", name = "remove", description = "Remove an existing bookings")
+public class RemoveCommand implements Action {
 
     @Reference
     private BookingService bookingService;
 
+    @Argument(index = 0, name = "ids", description = "List of bookings to remove", required = true, multiValued = true)
+    @Completion(BookingIdCompleter.class)
+    List<Long> ids;
+
     @Override
-    public int complete(Session session, CommandLine commandLine, List<String> candidates) {
-        StringsCompleter delegate = new StringsCompleter();
-        for (Booking booking : bookingService.list()) {
-            delegate.getStrings().add(String.valueOf(booking.getId()));
+    public Object execute() throws Exception {
+        for (Long id : ids) {
+            bookingService.remove(id);
         }
-        return delegate.complete(session, commandLine, candidates);
+        return null;
     }
 
 }

@@ -14,34 +14,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.karaf.jpa.command;
+package org.apache.karaf.commands.completers;
 
-import org.apache.karaf.jpa.Booking;
-import org.apache.karaf.jpa.BookingService;
-import org.apache.karaf.shell.api.action.Action;
-import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.jpa.model.Booking;
+import org.apache.karaf.jpa.service.BookingService;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.support.table.ShellTable;
+import org.apache.karaf.shell.api.console.CommandLine;
+import org.apache.karaf.shell.api.console.Completer;
+import org.apache.karaf.shell.api.console.Session;
+import org.apache.karaf.shell.support.completers.StringsCompleter;
+
+import java.util.List;
 
 @Service
-@Command(scope = "booking", name = "list", description = "List the current bookings")
-public class ListCommand implements Action {
+public class BookingIdCompleter implements Completer {
 
     @Reference
     private BookingService bookingService;
 
     @Override
-    public Object execute() throws Exception {
-        ShellTable table = new ShellTable();
-        table.column("ID");
-        table.column("Flight");
-        table.column("Customer");
+    public int complete(Session session, CommandLine commandLine, List<String> candidates) {
+        StringsCompleter delegate = new StringsCompleter();
         for (Booking booking : bookingService.list()) {
-            table.addRow().addContent(booking.getId(), booking.getFlight(), booking.getCustomer());
+            delegate.getStrings().add(String.valueOf(booking.getId()));
         }
-        table.print(System.out);
-        return null;
+        return delegate.complete(session, commandLine, candidates);
     }
 
 }

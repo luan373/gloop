@@ -14,31 +14,39 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.karaf.jpa.command;
+package org.apache.karaf.commands.command;
 
-import org.apache.karaf.jpa.BookingService;
+import org.apache.karaf.commands.completers.BookingIdCompleter;
+import org.apache.karaf.jpa.model.Booking;
+import org.apache.karaf.jpa.service.BookingService;
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Completion;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
+import org.apache.karaf.shell.support.table.ShellTable;
 
 @Service
-@Command(scope = "booking", name = "add", description = "Add a booking")
-public class AddCommand implements Action {
+@Command(scope = "booking", name = "get", description = "Get the booking by id")
+public class GetCommand implements Action {
 
     @Reference
     private BookingService bookingService;
 
-    @Argument(index = 0, name = "customer", description = "Booking customer", required = true, multiValued = false)
-    String customer;
-
-    @Argument(index = 1, name = "flight", description = "Booking flight", required = true, multiValued = false)
-    String flight;
+    @Argument(index = 0, name = "id", description = "Id of booking to retreive", required = true, multiValued = false)
+    @Completion(BookingIdCompleter.class)
+    Long id;
 
     @Override
     public Object execute() throws Exception {
-        bookingService.add(flight, customer);
+        ShellTable table = new ShellTable();
+        table.column("ID");
+        table.column("Flight");
+        table.column("Customer");
+        Booking booking = bookingService.get(id);
+        table.addRow().addContent(booking.getId(), booking.getFlight(), booking.getCustomer());
+        table.print(System.out);
         return null;
     }
 

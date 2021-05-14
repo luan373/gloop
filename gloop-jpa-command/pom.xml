@@ -38,11 +38,12 @@
                 <configuration>
                     <instructions>
                         <Private-Package>
-                            org.apache.karaf.jpa.command,
-                            org.apache.karaf.jpa.completers
+                            org.apache.karaf.commands.command,
+                            org.apache.karaf.commands.completers
                         </Private-Package>
                         <Import-Package>
-                           	org.apache.karaf.jpa,
+                           	org.apache.karaf.jpa.model,
+                        	org.apache.karaf.jpa.service,
                             org.apache.karaf.shell*;version="[4,5)",
                             *
                         </Import-Package>
