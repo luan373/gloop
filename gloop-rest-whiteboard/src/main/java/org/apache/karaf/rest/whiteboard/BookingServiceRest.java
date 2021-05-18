@@ -13,31 +13,24 @@ import javax.ws.rs.core.Response;
 import org.apache.karaf.jpa.model.Booking;
 import org.apache.karaf.jpa.service.BookingService;
 import org.apache.karaf.rest.security.Secured;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.jaxrs.whiteboard.propertytypes.JaxrsApplicationSelect;
 import org.osgi.service.jaxrs.whiteboard.propertytypes.JaxrsResource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Path("booking")
+@JaxrsApplicationSelect("(osgi.jaxrs.name=gloop)")
 @Component(service = BookingServiceRest.class, scope = ServiceScope.PROTOTYPE)
 @JaxrsResource
-@JaxrsApplicationSelect("(osgi.jaxrs.name=gloop)")
 public class BookingServiceRest {
 
 	@Reference
 	private BookingService bookingService;
 	
-	private ObjectMapper mapper;
 	
 	public BookingServiceRest() {
-		if (mapper == null) {
-			mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		}
 	}
 	
 	@Secured
@@ -45,14 +38,7 @@ public class BookingServiceRest {
 	@Produces(MediaType.APPLICATION_JSON)
 	@GET
 	public Response list() {
-		Response response = null;
-		try {
-			response = Response.ok().entity(mapper.writeValueAsString(bookingService.list())).build();
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		return response;
+		return Response.ok().entity(bookingService.list()).build();
 	}
 
 	@Path("/{id}")
@@ -62,7 +48,7 @@ public class BookingServiceRest {
 		Response response = null;
 
 		try {
-			response = Response.ok().entity(mapper.writeValueAsString(bookingService.get(id))).build();
+			response = Response.ok().entity(bookingService.get(id)).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,6 +58,7 @@ public class BookingServiceRest {
 
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@POST
 	public void add(Booking booking) {
 		bookingService.add(booking);

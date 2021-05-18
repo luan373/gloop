@@ -10,6 +10,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+import io.fusionauth.jwt.Verifier;
+import io.fusionauth.jwt.domain.JWT;
+import io.fusionauth.jwt.hmac.HMACVerifier;
+
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
@@ -20,7 +24,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-
+    	
         // Get the Authorization header from the request
         String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
@@ -66,7 +70,15 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     }
 
     private void validateToken(String token) throws Exception {
-        // Check if the token was issued by the server and if it's not expired
-        // Throw an Exception if the token is invalid
+    	// Build an HMC verifier using the same secret that was used to sign the JWT
+    	Verifier verifier = HMACVerifier.newVerifier("too many secrets");
+
+    	// Verify and decode the encoded string JWT to a rich object
+    	JWT jwt = JWT.getDecoder().decode(token, verifier);
+
+    	// Assert the subject of the JWT is as expected
+    	if (jwt.isExpired()) {
+			throw new Exception();
+		}
     }
 }

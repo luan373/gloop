@@ -24,14 +24,15 @@
     <persistence-unit name="gloop-hibernate" transaction-type="JTA">
     	<description>o</description>
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
+		
         <!-- Only used when transaction-type=JTA -->
         <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=gloop)</jta-data-source>
+        
+        <class>org.apache.karaf.jpa.model.Booking</class>
+        <class>org.apache.karaf.jpa.model.Credentials</class>
 
-        <!-- Only used when transaction-type=RESOURCE_LOCAL -->
-        <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=gloop)</non-jta-data-source>
-        <class>org.apache.karaf.jpa.Booking</class>
-        <class>org.apache.karaf.jpa.User</class>
+        <!-- Only used when transaction-type=RESOURCE_LOCAL
+        <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=gloop)</non-jta-data-source> -->
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>

@@ -25,9 +25,6 @@ import org.osgi.service.component.annotations.Reference;
 
 import java.util.List;
 
-/**
- * Implementation of the booking service using the JPA entity manager service (provided by Karaf).
- */
 @Component(service = BookingService.class, immediate = true)
 public class BookingServiceImpl implements BookingService {
 

@@ -30,7 +30,7 @@
 		<camel.version>3.6.0</camel.version>
 		<cglib.bundle.version>3.2.9_1</cglib.bundle.version>
 		<cxf.version>3.4.0</cxf.version>
-		<jackson.version>2.11.3</jackson.version>
+		<jackson.version>2.12.2</jackson.version>
 		<jna.version>5.8.0</jna.version>
 		<jaxb.version>2.3.3</jaxb.version>
 		<commons-beanutils.version>1.9.4</commons-beanutils.version>
@@ -44,7 +44,7 @@
 		<commons-pool2.version>2.6.2</commons-pool2.version>
 		<commons-io.version>2.8.0</commons-io.version>
 		<eclipselink.version>2.7.8</eclipselink.version>
-		<jasypt.bundle.version>1.9.3_1</jasypt.bundle.version>
+		<jasypt.bundle.version>1.9.3</jasypt.bundle.version>
 		<jolokia.version>1.6.2</jolokia.version>
 		<servlet.spec.groupId>javax.servlet</servlet.spec.groupId>
 		<servlet.spec.artifactId>javax.servlet-api</servlet.spec.artifactId>
