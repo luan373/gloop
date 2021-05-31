@@ -96,15 +96,21 @@ public class CredentialsServiceImpl implements CredentialsService {
 				}
 			}
 		});
+	}
 
-		/**
-		 * jpaTemplate.txExpr(TransactionType.Required, entityManager -> entityManager
-		 * .createQuery("SELECT c FROM Credentials c WHERE c.username =:username AND
-		 * c.password =:password ", Credentials.class)) .setParameter("username",
-		 * username) .setParameter("password", password) .getSingleResult();
-		 * 
-		 * return null;
-		 */
+	@Override
+	public Credentials get(String username) {
+		return jpaTemplate.txExpr(TransactionType.Supports, new EmFunction<Credentials>() {
+			@Override
+			public Credentials apply(EntityManager em) {
+				try {
+					return em.createQuery("SELECT c FROM Credentials c WHERE c.username =:username ", Credentials.class)
+							.setParameter("username", username).getSingleResult();
+				} catch (NoResultException nre) {
+					return null;
+				}
+			}
+		});
 	}
 
 }

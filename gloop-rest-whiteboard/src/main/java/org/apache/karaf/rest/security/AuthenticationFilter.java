@@ -10,9 +10,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-import io.fusionauth.jwt.Verifier;
-import io.fusionauth.jwt.domain.JWT;
-import io.fusionauth.jwt.hmac.HMACVerifier;
+import org.apache.karaf.rest.util.JwtUtil;
+import org.osgi.service.component.annotations.Reference;
 
 @Secured
 @Provider
@@ -21,7 +20,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     private static final String REALM = "example";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
-
+    
+    @Reference
+    private JwtUtil jwtUtil;
+    
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
     	
@@ -42,7 +44,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         try {
 
             // Validate the token
-            validateToken(token);
+        	jwtUtil.validateToken(token);
 
         } catch (Exception e) {
             abortWithUnauthorized(requestContext);
@@ -69,16 +71,4 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                         .build());
     }
 
-    private void validateToken(String token) throws Exception {
-    	// Build an HMC verifier using the same secret that was used to sign the JWT
-    	Verifier verifier = HMACVerifier.newVerifier("too many secrets");
-
-    	// Verify and decode the encoded string JWT to a rich object
-    	JWT jwt = JWT.getDecoder().decode(token, verifier);
-
-    	// Assert the subject of the JWT is as expected
-    	if (jwt.isExpired()) {
-			throw new Exception();
-		}
-    }
 }

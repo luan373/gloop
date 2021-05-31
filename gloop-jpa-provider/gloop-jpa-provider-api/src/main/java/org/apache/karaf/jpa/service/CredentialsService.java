@@ -27,6 +27,8 @@ public interface CredentialsService {
 	Credentials get(Long id);
 	
 	Credentials get(String username, String password);
+	
+	Credentials get(String username);
 
 	void add(Credentials credentials);
 

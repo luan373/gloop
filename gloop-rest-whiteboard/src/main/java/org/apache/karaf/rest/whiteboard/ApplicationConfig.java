@@ -19,6 +19,7 @@ public class ApplicationConfig extends Application {
 		Set<Class<?>> resource = new HashSet<>();
 		
 		resource.add(com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider.class);
+		resource.add(org.apache.karaf.rest.security.CORSFilter.class);
 		resource.add(org.apache.karaf.rest.security.AuthenticationFilter.class);
 
 		resource.add(org.apache.karaf.rest.whiteboard.BookingServiceRest.class);

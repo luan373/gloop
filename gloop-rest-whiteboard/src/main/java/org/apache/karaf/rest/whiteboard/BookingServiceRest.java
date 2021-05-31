@@ -13,7 +13,6 @@ import javax.ws.rs.core.Response;
 import org.apache.karaf.jpa.model.Booking;
 import org.apache.karaf.jpa.service.BookingService;
 import org.apache.karaf.rest.security.Secured;
-import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;

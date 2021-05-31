@@ -1,17 +1,21 @@
 package org.apache.karaf.rest.whiteboard;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.karaf.jpa.model.Credentials;
 import org.apache.karaf.jpa.service.CredentialsService;
+import org.apache.karaf.rest.api.model.RefreshToken;
+import org.apache.karaf.rest.api.model.User;
+import org.apache.karaf.rest.security.Secured;
+import org.apache.karaf.rest.util.JwtUtil;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -19,9 +23,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.jaxrs.whiteboard.propertytypes.JaxrsApplicationSelect;
 import org.osgi.service.jaxrs.whiteboard.propertytypes.JaxrsResource;
 
-import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.domain.JWT;
-import io.fusionauth.jwt.hmac.HMACSigner;
 
 @Path("/authentication")
 @JaxrsApplicationSelect("(osgi.jaxrs.name=gloop)")
@@ -31,8 +33,12 @@ public class AuthenticationRest {
 
 	@Reference
 	private CredentialsService service;
+	
+	@Reference
+    private JwtUtil jwtUtil;
 
 	@POST
+	@Path("login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response authenticateUser(Credentials credentials) {
@@ -46,7 +52,7 @@ public class AuthenticationRest {
 			authenticate(username, password);
 
 			// Issue a token for the user
-			String token = issueToken(username);
+			String token = jwtUtil.issueToken(username);
 
 			// Return the token on the response
 			return Response.ok(token).build();
@@ -55,34 +61,54 @@ public class AuthenticationRest {
 			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 	}
+	
+	@POST
+	@Path("refresh")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response refreshToken(RefreshToken rt) {
+    	// Verify and decode the encoded string JWT to a rich object
+    	JWT jwt = jwtUtil.decodeToken(rt.getRefresh_token());
+    	
+    	String token = rt.getRefresh_token();
+    	
+    	if(jwt.isExpired()) {
+    		 token = jwtUtil.issueToken(jwt.subject);
+    	}
+		
+		return Response.ok(token).build();
+	}
+	
+	@GET
+	@Path("user")
+	@Secured
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response user(@Context HttpHeaders httpheaders) {
+		String authorizationHeader = httpheaders.getHeaderString(HttpHeaders.AUTHORIZATION);
+		String token = authorizationHeader
+                .substring("Bearer".length()).trim();
+		
+    	// Verify and decode the encoded string JWT to a rich object
+    	JWT jwt = jwtUtil.decodeToken(token);
+    	
+    	Credentials credentials = service.get(jwt.subject);
+		
+		return Response.ok(new User(credentials.getUsername())).build();
+	}
 
 	private void authenticate(String username, String password) throws Exception {
 		StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
-		String encryptedPassword = passwordEncryptor.encryptPassword(password);
 		
-		if(passwordEncryptor.checkPassword(password, encryptedPassword)) {
-			System.out.println("valido");
-		}
+		Credentials credentials = service.get(username);
 		
-		Credentials credentials = service.get(username, password);
-		
-		if(credentials == null) {
+		if(credentials != null) {
+			if(!passwordEncryptor.checkPassword(password, credentials.getPassword())) {
+				throw new Exception();
+			}
+		} else {
 			throw new Exception();
 		}
 	}
 
-	private String issueToken(String username) {
-		// Build an HMAC signer using a SHA-256 hash
-		Signer signer = HMACSigner.newSHA256Signer("too many secrets");
-
-		// Build a new JWT with an issuer(iss), issued at(iat), subject(sub) and
-		// expiration(exp)
-		JWT jwt = new JWT().setIssuer("www.acme.com").setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
-				.setSubject(username).setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
-
-		// Sign and encode the JWT to a JSON string representation
-		String encodedJWT = JWT.getEncoder().encode(jwt, signer);
-
-		return encodedJWT;
-	}
 }
