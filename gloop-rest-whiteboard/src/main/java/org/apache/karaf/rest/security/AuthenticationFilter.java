@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.karaf.rest.util.JwtUtil;
-import org.osgi.service.component.annotations.Reference;
 
 @Secured
 @Provider
@@ -21,7 +20,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final String REALM = "example";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
     
-    @Reference
     private JwtUtil jwtUtil;
     
     @Override
