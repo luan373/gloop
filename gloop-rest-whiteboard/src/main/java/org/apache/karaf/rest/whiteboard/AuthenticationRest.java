@@ -34,8 +34,9 @@ public class AuthenticationRest {
 	@Reference
 	private CredentialsService service;
 	
+	@Reference
     private JwtUtil jwtUtil;
-
+	
 	@POST
 	@Path("login")
 	@Produces(MediaType.APPLICATION_JSON)

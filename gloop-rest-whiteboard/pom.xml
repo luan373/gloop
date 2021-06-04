@@ -50,8 +50,7 @@
 		    <artifactId>jasypt</artifactId>
 		    <version>${jasypt.bundle.version}</version>
 		</dependency>
-		
-
+	
 	</dependencies>
 
 	<build>

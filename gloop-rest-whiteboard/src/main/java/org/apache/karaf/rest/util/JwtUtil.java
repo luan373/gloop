@@ -3,12 +3,15 @@ package org.apache.karaf.rest.util;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
+import org.osgi.service.component.annotations.Component;
+
 import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.Verifier;
 import io.fusionauth.jwt.domain.JWT;
 import io.fusionauth.jwt.hmac.HMACSigner;
 import io.fusionauth.jwt.hmac.HMACVerifier;
 
+@Component(service = JwtUtil.class, immediate = true)
 public class JwtUtil {
 	
 	private static final String SECRET_JWT = "deadMouseArrombado";

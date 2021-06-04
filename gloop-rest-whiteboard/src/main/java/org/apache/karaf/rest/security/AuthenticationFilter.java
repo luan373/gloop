@@ -20,8 +20,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final String REALM = "example";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
     
-    private JwtUtil jwtUtil;
-    
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
     	
@@ -40,7 +38,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                             .substring(AUTHENTICATION_SCHEME.length()).trim();
 
         try {
-
+        	JwtUtil jwtUtil = new JwtUtil();
             // Validate the token
         	jwtUtil.validateToken(token);
 
