@@ -15,7 +15,6 @@
 	<modules>
 		<module>gloop-features</module>
 		<module>gloop-jpa-provider</module>
-		<module>gloop-jpa-command</module>
 		<module>gloop-rest-whiteboard</module>
 	</modules>
 

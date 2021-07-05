@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:jpa="http://aries.apache.org/xmlns/jpa/v2.0.0"
+	xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 https://osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<jpa:enable />
+	<tx:enable-annotations />
+
+	<service ref="alternativaService"
+		interface="br.com.gloop.jpa.service.AlternativaService" />
+	<service ref="credentialsService"
+		interface="br.com.gloop.jpa.service.CredentialsService" />
+	<service ref="materiaService"
+		interface="br.com.gloop.jpa.service.MateriaService" />
+	<service ref="questaoService"
+		interface="br.com.gloop.jpa.service.QuestaoService" />
+
+	<bean id="alternativaService"
+		class="org.apache.karaf.jpa.blueprint.hibernate.AlternativaServiceImpl" />
+	<bean id="credentialsService"
+		class="org.apache.karaf.jpa.blueprint.hibernate.CredentialsServiceImpl" />
+	<bean id="materiaService"
+		class="org.apache.karaf.jpa.blueprint.hibernate.MateriaServiceImpl" />
+	<bean id="questaoService"
+		class="org.apache.karaf.jpa.blueprint.hibernate.QuestaoServiceImpl" />
+
+</blueprint>

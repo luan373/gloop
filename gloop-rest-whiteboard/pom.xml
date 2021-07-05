@@ -29,7 +29,7 @@
 			<artifactId>javax.ws.rs-api</artifactId>
 			<version>2.1</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-json-provider</artifactId>
@@ -64,7 +64,7 @@
 							*
 						</Import-Package>
 						<Private-Package>
-							org.apache.karaf.rest,
+							br.com.gloop.rest,
 						</Private-Package>
 					</instructions>
 				</configuration>

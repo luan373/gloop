@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>gloop-jpa-provider-ds-hibernate</module>
+        <module>gloop-jpa-provider-blueprint-hibernate</module>
     </modules>
 
 </project>

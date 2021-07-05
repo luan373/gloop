@@ -29,10 +29,17 @@
 		<feature>jdbc</feature>
 		<feature dependency="true">aries-blueprint</feature>
 		<feature version="[2,3)">jpa</feature>
-		<feature version="[5,6)">hibernate</feature>
-		<!--<feature version="[3,4)">openjpa3</feature> -->
+        <feature version="[2,3)">eclipselink</feature>
+        <feature version="[5,6)">hibernate</feature>
+        <feature version="[3,4)">openjpa</feature>
 		<bundle>mvn:br.com/gloop-jpa-provider-api/${project.version}</bundle>
 	</feature>
+	
+	<!-- Blueprint Providers -->
+    <feature name="gloop-jpa-provider-blueprint-hibernate" version="${project.version}">
+        <feature version="${project.version}">gloop-jpa-common</feature>
+        <bundle>mvn:br.com/gloop-jpa-provider-blueprint-hibernate/${project.version}</bundle>
+    </feature>
 
 	<!-- Declarative Service Providers -->
 	<feature name="gloop-jpa-provider-ds-hibernate"
@@ -40,10 +47,6 @@
 		<feature>scr</feature>
 		<feature version="${project.version}">gloop-jpa-common</feature>
 		<bundle>mvn:br.com/gloop-jpa-provider-ds-hibernate/${project.version}</bundle>
-	</feature>
-
-	<feature name="gloop-jpa-command" version="${project.version}">
-		<bundle>mvn:br.com/gloop-jpa-command/${project.version}</bundle>
 	</feature>
 
 	<feature name="gloop-rest-whiteboard"
